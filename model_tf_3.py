@@ -92,6 +92,7 @@ class GTN(layers.Layer): # layers.Layer keeps track of everything under the hood
     
     def call(self, A, X, target_x, target):
         A = tf.expand_dims(A, 0)
+        A_t = tf.transpose(A, perm=[0,3,1, 2])
         Ws = []
         
         for i in range(self.num_layers):
