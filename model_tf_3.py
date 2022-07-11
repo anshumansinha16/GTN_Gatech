@@ -92,7 +92,7 @@ class GTN(layers.Layer): # layers.Layer keeps track of everything under the hood
     
     def call(self, A, X, target_x, target):
         A = tf.expand_dims(A, 0)
-        A_t = tf.transpose(A, perm=[0,3,1, 2])
+        A = tf.transpose(A, perm=[0,3,1, 2])
         Ws = []
         
         for i in range(self.num_layers):
@@ -115,7 +115,7 @@ class GTN(layers.Layer): # layers.Layer keeps track of everything under the hood
                 X_ = tf.nn.relu(self.gcn_conv(X,H[i])).numpy()
             else:
                 X_tmp = tf.nn.relu(self.gcn_conv(X,H[i])).numpy()
-                X_ = tf.concat((X_,X_tmp), dim=1)
+                X_ = tf.concat((X_,X_tmp), 1)
 
         X_ = self.linear1(X_)
         X_ = tf.nn.relu(X_).numpy()
