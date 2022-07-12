@@ -45,10 +45,7 @@ class GTN(layers.Layer): # layers.Layer keeps track of everything under the hood
         
         X = tf.matmul(X, self.weight)
         H = self.norm(H, add=True)
-        
-        print('X:', X)
-        print('H:', H)
-        
+       
         return tf.matmul(tf.transpose(H),X)
 
     
@@ -175,10 +172,6 @@ class GTConv(keras.layers.Layer):
         self.weight= tf.fill(self.weight.shape, 0.1 )
     
     def call(self, A):
-        print('in')
-        print(A.shape)
-        print('sw',self.weight)
         A = tf.reduce_sum(A*(tf.nn.softmax(self.weight,1)), 1)
-        print('lock')
         return A 
 
