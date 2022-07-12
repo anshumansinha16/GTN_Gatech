@@ -56,6 +56,7 @@ if __name__ == '__main__':
     # creation of nodes, edges and labels in 3 separate matrix/ vectors!    
     
     num_nodes = edges[0].shape[0]
+    num_nodes = 1000
 
     # A = Adjacency matrix 
     
@@ -67,6 +68,7 @@ if __name__ == '__main__':
     
     A = tf.concat((A, tf.expand_dims(tf.convert_to_tensor(tf.eye(num_nodes), dtype= tf.float32), -1) ), -1)
     
+    node_features = node_features[0:1000,0:334]
     node_features = tf.convert_to_tensor(node_features, dtype= tf.float32)
     
     train_node = tf.convert_to_tensor(np.array(labels[0])[:,0])
@@ -110,11 +112,11 @@ if __name__ == '__main__':
 
             with tf.GradientTape() as tape:
               loss,y_train,Ws = model(A, node_features, train_node, train_target)
-              train_f1 = torch.mean(f1_score(torch.argmax(y_train,dim=1), train_target, num_classes=num_classes)).cpu().numpy()
+              train_f1 = tf.reduce_mean(f1_score(tf.math.argmax(y_train, 1), train_target, num_classes=num_classes)).cpu()
               print('Train - Loss: {}, Macro_F1: {}'.format(loss.cpu().numpy(), train_f1))
 
-            grads = tape.gradient(loss, model.parameters())
-            optimizer.apply_gradients(zip(grads, model.parameters()))
+            grads = tape.gradient(loss, model.trainable_weights)
+            optimizer.apply_gradients(zip(grads, model.trainable_weights))
 
             if val_f1 > best_val_f1:
                 best_val_loss = val_loss.cpu().numpy()
