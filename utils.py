@@ -27,9 +27,17 @@ def true_positive(pred, target, num_classes):
         num_classes (int): The number of classes.
     :rtype: :class:`LongTensor`
     """
+    
+
     out = []
+    
     for i in tf.range(num_classes):
-        out.append(tf.reduce_sum(tf.cast((pred == i) & (target == i), dtype=tf.int32)))
+        
+        i = tf.cast(i, tf.int64)
+        pred= tf.cast(pred, tf.int64)
+        target= tf.cast(target, tf.int64)
+        out.append(tf.math.count_nonzero((pred == i) & (target == i)))
+        
     return tf.stack(out)
 
 
@@ -43,7 +51,13 @@ def true_negative(pred, target, num_classes):
     """
     out = []
     for i in tf.range(num_classes):
-        out.append(tf.reduce_sum(tf.cast((pred != i) & (target != i), dtype=tf.int32)))
+        
+        i = tf.cast(i, tf.int64)
+        pred= tf.cast(pred, tf.int64)
+        target= tf.cast(target, tf.int64)
+        out.append(tf.math.count_nonzero((pred != i) & (target != i)))
+        
+        
     return tf.stack(out)
 
 
@@ -58,7 +72,13 @@ def false_positive(pred, target, num_classes):
     """
     out = []
     for i in tf.range(num_classes):
-        out.append(tf.reduce_sum(tf.cast((pred == i) & (target != i), dtype=tf.int32)))
+        
+        i = tf.cast(i, tf.int64)
+        pred= tf.cast(pred, tf.int64)
+        target= tf.cast(target, tf.int64)
+        out.append(tf.math.count_nonzero((pred == i) & (target != i)))
+        
+        
     return tf.stack(out)
 
 
@@ -73,7 +93,10 @@ def false_negative(pred, target, num_classes):
     """
     out = []
     for i in tf.range(num_classes):
-        out.append(tf.reduce_sum(tf.cast((pred != i) & (target == i), dtype=tf.int32)))
+        i = tf.cast(i, tf.int64)
+        pred= tf.cast(pred, tf.int64)
+        target= tf.cast(target, tf.int64)
+        out.append(tf.math.count_nonzero((pred != i) & (target == i)))
     return tf.stack(out)
 
 
